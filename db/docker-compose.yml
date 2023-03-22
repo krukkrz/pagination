@@ -1,0 +1,22 @@
+
+version: "3.1"
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: booksdb
+      POSTGRES_PASSWORD: books
+      POSTGRES_USER: books
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+      - ./sql/01_init.sql:/docker-entrypoint-initdb.d/01_init.sql
+      - ./sql/02_fill_tables.sql:/docker-entrypoint-initdb.d/02_fill_tables.sql
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8090:8080
