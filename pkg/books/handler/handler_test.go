@@ -3,9 +3,9 @@ package handler_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/krukkrz/pagination/pkg/handler"
-	"github.com/krukkrz/pagination/pkg/handler/internal"
-	"github.com/krukkrz/pagination/pkg/model"
+	"github.com/krukkrz/pagination/pkg/books/handler"
+	internal2 "github.com/krukkrz/pagination/pkg/books/handler/internal"
+	"github.com/krukkrz/pagination/pkg/books/model"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -21,42 +21,42 @@ func TestFetchAllBooksLimitAndOffset(t *testing.T) {
 		expectedStatus  int
 		serviceError    bool
 		expectedBooks   []model.Book
-		bookServiceMock handler.Service
+		bookServiceMock handler.BookRepository
 	}{
 		{
 			name:            "handling only GET request",
 			limit:           10,
 			offset:          1,
 			method:          "POST",
-			bookServiceMock: internal.BookServiceMockReturnError(),
+			bookServiceMock: internal2.BookServiceMockReturnError(),
 			expectedStatus:  http.StatusMethodNotAllowed,
 		},
 		{
 			name:            "handler requires offset and limit parameters in path",
 			method:          "GET",
-			bookServiceMock: internal.BookServiceMockReturnError(),
+			bookServiceMock: internal2.BookServiceMockReturnError(),
 			expectedStatus:  http.StatusBadRequest,
 		},
 		{
 			name:            "limit and offset must be a number",
 			limit:           "l",
 			offset:          "o",
-			bookServiceMock: internal.BookServiceMockReturnError(),
+			bookServiceMock: internal2.BookServiceMockReturnError(),
 			expectedStatus:  http.StatusBadRequest,
 		},
 		{
-			name:            "handler accepts offset and limit and pass it to service",
+			name:            "handler accepts offset and limit and pass it to repository",
 			limit:           10,
 			offset:          1,
-			bookServiceMock: internal.BookServiceMockReturnBooks(10, 1, t),
+			bookServiceMock: internal2.BookServiceMockReturnBooks(10, 1, t),
 			expectedStatus:  http.StatusOK,
 		},
 		{
-			name:            "returns internal server error if service returns error",
+			name:            "returns internal server error if repository returns error",
 			limit:           10,
 			offset:          1,
 			serviceError:    true,
-			bookServiceMock: internal.BookServiceMockReturnError(),
+			bookServiceMock: internal2.BookServiceMockReturnError(),
 			expectedStatus:  http.StatusInternalServerError,
 		},
 
@@ -64,8 +64,8 @@ func TestFetchAllBooksLimitAndOffset(t *testing.T) {
 			name:            "returns books in response if all went good",
 			limit:           10,
 			offset:          1,
-			bookServiceMock: internal.BookServiceMockReturnBooks(10, 1, t),
-			expectedBooks:   internal.Books,
+			bookServiceMock: internal2.BookServiceMockReturnBooks(10, 1, t),
+			expectedBooks:   internal2.Books,
 			expectedStatus:  http.StatusOK,
 		},
 	}
@@ -83,7 +83,7 @@ func TestFetchAllBooksLimitAndOffset(t *testing.T) {
 			srv := handler.NewServer(bs)
 
 			rr := httptest.NewRecorder()
-			handler := http.HandlerFunc(srv.FetchAllBooksWithLimitAndOffset)
+			handler := http.HandlerFunc(srv.FetchAllBooks)
 
 			handler.ServeHTTP(rr, req)
 

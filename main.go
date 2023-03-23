@@ -5,8 +5,6 @@ func main() {
 	//https://github.com/proullon/ramsql
 
 	//todo write a repository & unit tests
-	//todo write a service layer & unit tests
-	//todo write handler & unit tests
 	//todo write integration tests
 	//todo dockerize everything
 }

@@ -2,8 +2,8 @@ package internal
 
 import (
 	"fmt"
-	"github.com/krukkrz/pagination/pkg/handler"
-	"github.com/krukkrz/pagination/pkg/model"
+	"github.com/krukkrz/pagination/pkg/books/handler"
+	"github.com/krukkrz/pagination/pkg/books/model"
 	"testing"
 )
 
@@ -13,7 +13,7 @@ type BookServiceSuccessMock struct {
 	t              *testing.T
 }
 
-func (b BookServiceSuccessMock) FetchAllLimitAndOffset(limit, offset int) ([]model.Book, error) {
+func (b BookServiceSuccessMock) FetchAll(limit, offset int) ([]model.Book, error) {
 	if b.expectedOffset != offset {
 		b.t.Fatalf("incorrect offset expecting: %d, got: %d", b.expectedOffset, offset)
 	}
@@ -24,7 +24,7 @@ func (b BookServiceSuccessMock) FetchAllLimitAndOffset(limit, offset int) ([]mod
 	return Books, nil
 }
 
-func BookServiceMockReturnBooks(expectedLimit, expectedOffset int, t *testing.T) handler.Service {
+func BookServiceMockReturnBooks(expectedLimit, expectedOffset int, t *testing.T) handler.BookRepository {
 	return &BookServiceSuccessMock{
 		expectedLimit:  expectedLimit,
 		expectedOffset: expectedOffset,
@@ -35,10 +35,10 @@ func BookServiceMockReturnBooks(expectedLimit, expectedOffset int, t *testing.T)
 type BookServiceErrorMock struct {
 }
 
-func (b BookServiceErrorMock) FetchAllLimitAndOffset(limit, offset int) ([]model.Book, error) {
+func (b BookServiceErrorMock) FetchAll(limit, offset int) ([]model.Book, error) {
 	return nil, fmt.Errorf("mocked error")
 }
 
-func BookServiceMockReturnError() handler.Service {
+func BookServiceMockReturnError() handler.BookRepository {
 	return &BookServiceErrorMock{}
 }

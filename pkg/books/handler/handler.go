@@ -2,27 +2,27 @@ package handler
 
 import (
 	"encoding/json"
-	"github.com/krukkrz/pagination/pkg/model"
+	"github.com/krukkrz/pagination/pkg/books/model"
 	"log"
 	"net/http"
 	"strconv"
 )
 
-type Service interface {
-	FetchAllLimitAndOffset(int, int) ([]model.Book, error)
+type BookRepository interface {
+	FetchAll(int, int) ([]model.Book, error)
 }
 
 type Server struct {
-	service Service
+	repository BookRepository
 }
 
-func NewServer(service Service) *Server {
+func NewServer(repository BookRepository) *Server {
 	return &Server{
-		service: service,
+		repository: repository,
 	}
 }
 
-func (s Server) FetchAllBooksWithLimitAndOffset(rw http.ResponseWriter, r *http.Request) {
+func (s Server) FetchAllBooks(rw http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		rw.WriteHeader(http.StatusMethodNotAllowed)
 	}
@@ -39,7 +39,7 @@ func (s Server) FetchAllBooksWithLimitAndOffset(rw http.ResponseWriter, r *http.
 
 	log.Printf("received a request with limit: %d and offset: %d", limit, offset)
 
-	books, err := s.service.FetchAllLimitAndOffset(limit, offset)
+	books, err := s.repository.FetchAll(limit, offset)
 	if err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
 	}

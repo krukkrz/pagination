@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"github.com/krukkrz/pagination/pkg/model"
+	"github.com/krukkrz/pagination/pkg/books/model"
 )
 
 var Books = []model.Book{
