@@ -19,7 +19,7 @@ make stop
 ## Test
 In order to run all tests in the project run:
 ```bash
-go test ./...
+make test
 ```
 ## Please challenge me!
 I love challenges :muscle: 
