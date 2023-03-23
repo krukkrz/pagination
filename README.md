@@ -4,6 +4,7 @@ This is an example project to show how pagination may be implemented. It exposes
 
 - cursor next/previous
 - offset and limit
+- auto Incremental PK of the ID
 
 ## Run
 In order to start application just run in terminal:
@@ -20,3 +21,7 @@ In order to run all tests in the project run:
 ```bash
 go test ./...
 ```
+## Please challenge me!
+I love challenges :muscle: 
+
+If you think you would change something in this code, or maybe you know a better approach in pagination (or any other part of code) - don't hesitate to contact me or even start an issue!
