@@ -2,7 +2,7 @@ package internal
 
 import (
 	"fmt"
-	"github.com/krukkrz/pagination/pkg/books/handler"
+	"github.com/krukkrz/pagination/pkg/books/api"
 	"github.com/krukkrz/pagination/pkg/books/model"
 	"testing"
 )
@@ -24,7 +24,7 @@ func (b BookServiceSuccessMock) FetchAll(limit, offset int) ([]model.Book, error
 	return Books, nil
 }
 
-func BookServiceMockReturnBooks(expectedLimit, expectedOffset int, t *testing.T) handler.BookRepository {
+func BookServiceMockReturnBooks(expectedLimit, expectedOffset int, t *testing.T) api.BookRepository {
 	return &BookServiceSuccessMock{
 		expectedLimit:  expectedLimit,
 		expectedOffset: expectedOffset,
@@ -39,6 +39,6 @@ func (b BookServiceErrorMock) FetchAll(limit, offset int) ([]model.Book, error) 
 	return nil, fmt.Errorf("mocked error")
 }
 
-func BookServiceMockReturnError() handler.BookRepository {
+func BookServiceMockReturnError() api.BookRepository {
 	return &BookServiceErrorMock{}
 }

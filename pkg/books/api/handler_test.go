@@ -1,10 +1,10 @@
-package handler_test
+package api_test
 
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/krukkrz/pagination/pkg/books/handler"
-	internal2 "github.com/krukkrz/pagination/pkg/books/handler/internal"
+	"github.com/krukkrz/pagination/pkg/books/api"
+	internal2 "github.com/krukkrz/pagination/pkg/books/api/internal"
 	"github.com/krukkrz/pagination/pkg/books/model"
 	"net/http"
 	"net/http/httptest"
@@ -21,7 +21,7 @@ func TestFetchAllBooksLimitAndOffset(t *testing.T) {
 		expectedStatus  int
 		serviceError    bool
 		expectedBooks   []model.Book
-		bookServiceMock handler.BookRepository
+		bookServiceMock api.BookRepository
 	}{
 		{
 			name:            "handling only GET request",
@@ -32,7 +32,7 @@ func TestFetchAllBooksLimitAndOffset(t *testing.T) {
 			expectedStatus:  http.StatusMethodNotAllowed,
 		},
 		{
-			name:            "handler requires offset and limit parameters in path",
+			name:            "api requires offset and limit parameters in path",
 			method:          "GET",
 			bookServiceMock: internal2.BookServiceMockReturnError(),
 			expectedStatus:  http.StatusBadRequest,
@@ -45,7 +45,7 @@ func TestFetchAllBooksLimitAndOffset(t *testing.T) {
 			expectedStatus:  http.StatusBadRequest,
 		},
 		{
-			name:            "handler accepts offset and limit and pass it to repository",
+			name:            "api accepts offset and limit and pass it to repository",
 			limit:           10,
 			offset:          1,
 			bookServiceMock: internal2.BookServiceMockReturnBooks(10, 1, t),
@@ -80,7 +80,7 @@ func TestFetchAllBooksLimitAndOffset(t *testing.T) {
 			}
 
 			bs := tc.bookServiceMock
-			srv := handler.NewServer(bs)
+			srv := api.NewServer(bs)
 
 			rr := httptest.NewRecorder()
 			handler := http.HandlerFunc(srv.FetchAllBooks)
@@ -88,7 +88,7 @@ func TestFetchAllBooksLimitAndOffset(t *testing.T) {
 			handler.ServeHTTP(rr, req)
 
 			if status := rr.Code; status != tc.expectedStatus {
-				t.Fatalf("handler returned wrong status code: got %v want %v",
+				t.Fatalf("api returned wrong status code: got %v want %v",
 					status, tc.expectedStatus)
 			}
 
@@ -100,7 +100,7 @@ func TestFetchAllBooksLimitAndOffset(t *testing.T) {
 				}
 
 				if !reflect.DeepEqual(actual, tc.expectedBooks) {
-					t.Errorf("handler returned unexpected body: got %v want %v", actual, tc.expectedBooks)
+					t.Errorf("api returned unexpected body: got %v want %v", actual, tc.expectedBooks)
 				}
 			}
 		})

@@ -1,4 +1,4 @@
-package handler
+package api
 
 import (
 	"encoding/json"
@@ -9,7 +9,7 @@ import (
 )
 
 type BookRepository interface {
-	FetchAll(int, int) ([]model.Book, error)
+	FetchAll(limit, offset int) ([]model.Book, error)
 }
 
 type Server struct {
