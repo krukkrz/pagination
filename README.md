@@ -2,8 +2,8 @@
 
 This is an example project to show how pagination may be implemented. It exposes two HTTP endpoints which shows two approaches:
 
-- cursor next/previous
 - offset and limit
+- cursor next/previous
 - auto Incremental PK of the ID
 
 ## Run

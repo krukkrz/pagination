@@ -1,9 +1,8 @@
 package main
 
 func main() {
-	//todo find most common pattern for the response object
-	//todo adjust handler
-	//todo write a repository & unit tests
+	//todo instantiate database here
+	//todo implement all stack in here
 	//todo write integration tests
 	//todo dockerize everything
 }
