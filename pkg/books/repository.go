@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/krukkrz/pagination/pkg/books/model"
+	"log"
 )
 
 type Repository struct {
@@ -17,6 +18,7 @@ func NewRepository(db *sql.DB) *Repository {
 }
 
 func (r Repository) FetchAll(limit, offset int) ([]model.Book, error) {
+	log.Printf("fetching books with offset: %d and limit: %d", offset, limit)
 	query := "SELECT * FROM books LIMIT $1 OFFSET $2;"
 
 	rows, err := r.db.Query(query, limit, offset)

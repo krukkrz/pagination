@@ -35,7 +35,15 @@ func NewServer(repository BookRepository) *Server {
 	}
 }
 
+func (s Server) Start(port string) error {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/books", s.FetchAllBooks)
+	log.Printf("Application is ready to listen on port: %s", port)
+	return http.ListenAndServe(port, mux)
+}
+
 func (s Server) FetchAllBooks(rw http.ResponseWriter, r *http.Request) {
+	log.Printf("received a request: %s", r.RequestURI)
 	if r.Method != "GET" {
 		rw.WriteHeader(http.StatusMethodNotAllowed)
 	}
@@ -57,8 +65,7 @@ func (s Server) FetchAllBooks(rw http.ResponseWriter, r *http.Request) {
 		rw.WriteHeader(http.StatusInternalServerError)
 	}
 
-	nextOffset := offset + limit
-	prevOffset := offset - limit
+	nextOffset, prevOffset := offset+limit, offset-limit
 	if prevOffset < 0 {
 		prevOffset = 0
 	}

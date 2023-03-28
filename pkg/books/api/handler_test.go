@@ -92,6 +92,10 @@ func TestFetchAllBooksLimitAndOffset(t *testing.T) {
 			expectedBooks:   internal2.Books,
 			expectedStatus:  http.StatusOK,
 		},
+		{
+			name: "if no parameters in the request, return first page with default 10 elements", //todo implement this test
+			skip: true,
+		},
 	}
 
 	for _, tc := range testCases {
