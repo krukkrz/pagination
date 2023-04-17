@@ -8,3 +8,15 @@ create table if not exists books (
 CREATE SEQUENCE books_sequence
     start 1
   increment 1;
+
+
+create table if not exists cars (
+    car_id serial PRIMARY KEY,
+    brand VARCHAR ( 100 ) NOT NULL,
+    model VARCHAR ( 100 ) NOT NULL,
+    created_at TIMESTAMP NOT NULL
+);
+
+CREATE SEQUENCE cars_sequence
+    start 1
+  increment 1;

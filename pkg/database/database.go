@@ -24,9 +24,9 @@ func Connect() *sql.DB {
 	cfg := config{
 		host:     "localhost",
 		port:     "5432",
-		user:     "books",
-		password: "books",
-		dbname:   "booksdb",
+		user:     "pagination",
+		password: "pagination",
+		dbname:   "paginationdb",
 	}
 	db, err := sql.Open("postgres", cfg.String())
 	if err != nil {

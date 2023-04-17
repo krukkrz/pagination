@@ -6,9 +6,9 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_DB: booksdb
-      POSTGRES_PASSWORD: books
-      POSTGRES_USER: books
+      POSTGRES_DB: paginationdb
+      POSTGRES_PASSWORD: pagination
+      POSTGRES_USER: pagination
     ports:
       - 5432:5432
     volumes:

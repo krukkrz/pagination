@@ -1,13 +1,24 @@
 # Pagination
 
-This is an example project to show how pagination may be implemented. It exposes HTTP endpoint `/books` which accepts `limit` and `offset` parameters.
+This is an example project to show how pagination may be implemented. 
+
+## Limit & offset
+It style exposes HTTP endpoint `/books` which accepts `limit` and `offset` parameters.
 
 Example:
 ```bash
 curl "localhost:8000/books?limit=10&offset=0"
 ```
 
-[//]: # (- cursor next/previous)
+## Cursor
+It style exposes HTTP endpoint `/cars` 
+
+[//]: # (todo what parameters will this endpoint accept?)
+
+Example:
+```bash
+curl "localhost:8000/cars?limit=10&offset=0"
+```
 
 [//]: # (- auto Incremental PK of the ID)
 
