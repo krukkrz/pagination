@@ -3,22 +3,28 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/krukkrz/pagination/pkg/books/model"
+	booksModel "github.com/krukkrz/pagination/pkg/books/model"
+	carsModel "github.com/krukkrz/pagination/pkg/cars/model"
 	"log"
 	"net/http"
 	"strconv"
 )
 
 type BookRepository interface {
-	FetchAll(limit, offset int) ([]model.Book, error)
+	FetchAll(limit, offset int) ([]booksModel.Book, error)
+}
+
+type CarRepository interface {
+	FetchAll(cursor, limit int) ([]carsModel.Car, error)
 }
 
 type Server struct {
-	repository BookRepository
+	bookRepository BookRepository
+	carRepository  CarRepository
 }
 
-type PaginatedResponse struct {
-	Data  []model.Book  `json:"data"`
+type PaginatedResponse[T any] struct {
+	Data  []T           `json:"data"`
 	Links LinksResponse `json:"links"`
 }
 
@@ -29,9 +35,10 @@ type LinksResponse struct {
 	//Last  string //todo implement last link
 }
 
-func NewServer(repository BookRepository) *Server {
+func NewServer(bookRepository BookRepository, carRepository CarRepository) *Server {
 	return &Server{
-		repository: repository,
+		bookRepository: bookRepository,
+		carRepository:  carRepository,
 	}
 }
 
@@ -60,7 +67,7 @@ func (s Server) FetchAllBooks(rw http.ResponseWriter, r *http.Request) {
 
 	log.Printf("received a request with limit: %d and offset: %d", limit, offset)
 
-	books, err := s.repository.FetchAll(limit, offset)
+	books, err := s.bookRepository.FetchAll(limit, offset)
 	if err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
 	}
@@ -69,7 +76,7 @@ func (s Server) FetchAllBooks(rw http.ResponseWriter, r *http.Request) {
 	if prevOffset < 0 {
 		prevOffset = 0
 	}
-	response := PaginatedResponse{
+	response := PaginatedResponse[booksModel.Book]{
 		Data: books,
 		Links: LinksResponse{
 			Next:  fmt.Sprintf("%s?limit=%d&offset=%d", r.URL.Path, limit, nextOffset),

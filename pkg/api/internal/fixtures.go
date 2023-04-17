@@ -1,10 +1,11 @@
 package internal
 
 import (
-	"github.com/krukkrz/pagination/pkg/books/model"
+	books "github.com/krukkrz/pagination/pkg/books/model"
+	cars "github.com/krukkrz/pagination/pkg/cars/model"
 )
 
-var Books = []model.Book{
+var Books = []books.Book{
 	{1, "title 1", "author 1", "2023-03-23 19:00:00.62337"},
 	{2, "title 2", "author 2", "2023-03-23 19:00:00.62337"},
 	{3, "title 3", "author 3", "2023-03-23 19:00:00.62337"},
@@ -15,4 +16,17 @@ var Books = []model.Book{
 	{8, "title 8", "author 8", "2023-03-23 19:00:00.62337"},
 	{9, "title 9", "author 9", "2023-03-23 19:00:00.62337"},
 	{10, "title 10", "author 10", "2023-03-23 19:00:00.62337"},
+}
+
+var Cars = []cars.Car{
+	{1, "brand 1", "model 1", "2023-03-23 19:00:00.62337"},
+	{2, "brand 2", "model 2", "2023-03-23 19:00:00.62337"},
+	{3, "brand 3", "model 3", "2023-03-23 19:00:00.62337"},
+	{4, "brand 4", "model 4", "2023-03-23 19:00:00.62337"},
+	{5, "brand 5", "model 5", "2023-03-23 19:00:00.62337"},
+	{6, "brand 6", "model 6", "2023-03-23 19:00:00.62337"},
+	{7, "brand 7", "model 7", "2023-03-23 19:00:00.62337"},
+	{8, "brand 8", "model 8", "2023-03-23 19:00:00.62337"},
+	{9, "brand 9", "model 9", "2023-03-23 19:00:00.62337"},
+	{10, "brand 10", "model 10", "2023-03-23 19:00:00.62337"},
 }
