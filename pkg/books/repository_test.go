@@ -22,7 +22,6 @@ func TestFetchAll(t *testing.T) {
 		offset                 int
 		expectedFirstElementId int
 		expectedLastElementId  int
-		skipCause              string
 	}{
 		{
 			name:                   "should return books from 2 to 6",
@@ -40,19 +39,15 @@ func TestFetchAll(t *testing.T) {
 		},
 		{
 			name:                   "should return books from 4 to 10",
-			limit:                  3,
-			offset:                 11,
+			limit:                  7,
+			offset:                 3,
 			expectedFirstElementId: 4,
 			expectedLastElementId:  10,
-			skipCause:              "need to verify that real db will return expected result here",
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			if tc.skipCause != "" {
-				t.Skipf("skipping test because: %s", tc.skipCause)
-			}
 			repo := books.NewRepository(db)
 
 			actual, err := repo.FetchAll(tc.limit, tc.offset)
