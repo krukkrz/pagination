@@ -3,8 +3,8 @@ package api_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/krukkrz/pagination/pkg/books/api"
-	internal2 "github.com/krukkrz/pagination/pkg/books/api/internal"
+	"github.com/krukkrz/pagination/pkg/api"
+	"github.com/krukkrz/pagination/pkg/api/internal"
 	"github.com/krukkrz/pagination/pkg/books/model"
 	"net/http"
 	"net/http/httptest"
@@ -31,27 +31,27 @@ func TestFetchAllBooksLimitAndOffset(t *testing.T) {
 			limit:           10,
 			offset:          1,
 			method:          "POST",
-			bookServiceMock: internal2.BookServiceMockReturnError(),
+			bookServiceMock: internal.BookServiceMockReturnError(),
 			expectedStatus:  http.StatusMethodNotAllowed,
 		},
 		{
 			name:            "api requires offset and limit parameters in path",
 			method:          "GET",
-			bookServiceMock: internal2.BookServiceMockReturnError(),
+			bookServiceMock: internal.BookServiceMockReturnError(),
 			expectedStatus:  http.StatusBadRequest,
 		},
 		{
 			name:            "limit and offset must be a number",
 			limit:           "l",
 			offset:          "o",
-			bookServiceMock: internal2.BookServiceMockReturnError(),
+			bookServiceMock: internal.BookServiceMockReturnError(),
 			expectedStatus:  http.StatusBadRequest,
 		},
 		{
 			name:            "api accepts offset and limit and pass it to repository",
 			limit:           10,
 			offset:          1,
-			bookServiceMock: internal2.BookServiceMockReturnBooks(10, 1, t),
+			bookServiceMock: internal.BookServiceMockReturnBooks(10, 1, t),
 			expectedStatus:  http.StatusOK,
 		},
 		{
@@ -59,7 +59,7 @@ func TestFetchAllBooksLimitAndOffset(t *testing.T) {
 			limit:           10,
 			offset:          1,
 			serviceError:    true,
-			bookServiceMock: internal2.BookServiceMockReturnError(),
+			bookServiceMock: internal.BookServiceMockReturnError(),
 			expectedStatus:  http.StatusInternalServerError,
 		},
 		{
@@ -68,8 +68,8 @@ func TestFetchAllBooksLimitAndOffset(t *testing.T) {
 			offset:          0,
 			prevOffset:      0,
 			nextOffset:      10,
-			bookServiceMock: internal2.BookServiceMockReturnBooks(10, 0, t),
-			expectedBooks:   internal2.Books,
+			bookServiceMock: internal.BookServiceMockReturnBooks(10, 0, t),
+			expectedBooks:   internal.Books,
 			expectedStatus:  http.StatusOK,
 		},
 		{
@@ -78,8 +78,8 @@ func TestFetchAllBooksLimitAndOffset(t *testing.T) {
 			offset:          4,
 			prevOffset:      0,
 			nextOffset:      9,
-			bookServiceMock: internal2.BookServiceMockReturnBooks(5, 4, t),
-			expectedBooks:   internal2.Books,
+			bookServiceMock: internal.BookServiceMockReturnBooks(5, 4, t),
+			expectedBooks:   internal.Books,
 			expectedStatus:  http.StatusOK,
 		},
 		{
@@ -88,8 +88,8 @@ func TestFetchAllBooksLimitAndOffset(t *testing.T) {
 			offset:          9,
 			prevOffset:      4,
 			nextOffset:      14,
-			bookServiceMock: internal2.BookServiceMockReturnBooks(5, 9, t),
-			expectedBooks:   internal2.Books,
+			bookServiceMock: internal.BookServiceMockReturnBooks(5, 9, t),
+			expectedBooks:   internal.Books,
 			expectedStatus:  http.StatusOK,
 		},
 		{

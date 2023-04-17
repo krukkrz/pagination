@@ -1,8 +1,8 @@
 package main
 
 import (
+	"github.com/krukkrz/pagination/pkg/api"
 	"github.com/krukkrz/pagination/pkg/books"
-	"github.com/krukkrz/pagination/pkg/books/api"
 	"github.com/krukkrz/pagination/pkg/database"
 	"log"
 )

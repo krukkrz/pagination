@@ -2,7 +2,7 @@ package internal
 
 import (
 	"fmt"
-	"github.com/krukkrz/pagination/pkg/books/api"
+	"github.com/krukkrz/pagination/pkg/api"
 	"github.com/krukkrz/pagination/pkg/books/model"
 	"testing"
 )

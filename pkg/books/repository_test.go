@@ -9,7 +9,7 @@ import (
 )
 
 func TestFetchAll(t *testing.T) {
-	db, err := sql.Open("ramsql", "Test")
+	db, err := sql.Open("ramsql", "Test books")
 	if err != nil {
 		t.Fatalf("sql.Open : Error : %s\n", err)
 	}
