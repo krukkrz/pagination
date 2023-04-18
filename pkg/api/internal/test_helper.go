@@ -5,6 +5,7 @@ import (
 	"github.com/krukkrz/pagination/pkg/api"
 	books "github.com/krukkrz/pagination/pkg/books/model"
 	cars "github.com/krukkrz/pagination/pkg/cars/model"
+	"log"
 	"testing"
 )
 
@@ -51,11 +52,13 @@ type CarRepositorySuccessMock struct {
 
 func (b CarRepositorySuccessMock) FetchAll(cursor, limit int) ([]cars.Car, error) {
 	if b.expectedCursor != cursor {
-		b.t.Fatalf("incorrect offset expecting: %d, got: %d", b.expectedCursor, cursor)
+		log.Printf("incorrect cursor expecting: %d, got: %d", b.expectedCursor, cursor)
+		b.t.Fail()
 	}
 
 	if b.expectedLimit != limit {
-		b.t.Fatalf("incorrect limit expecting: %d, got: %d", b.expectedLimit, limit)
+		log.Printf("incorrect limit expecting: %d, got: %d", b.expectedLimit, limit)
+		b.t.Fail()
 	}
 	return Cars, nil
 }

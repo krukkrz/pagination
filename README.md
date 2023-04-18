@@ -3,7 +3,7 @@
 This is an example project to show how pagination may be implemented. 
 
 ## Limit & offset
-It style exposes HTTP endpoint `/books` which accepts `limit` and `offset` parameters.
+This style exposes HTTP endpoint `/books` which accepts `limit` and `offset` parameters.
 
 Example:
 ```bash
@@ -11,13 +11,11 @@ curl "localhost:8000/books?limit=10&offset=0"
 ```
 
 ## Cursor
-It style exposes HTTP endpoint `/cars` 
-
-[//]: # (todo what parameters will this endpoint accept?)
+This style exposes HTTP endpoint `/cars` which accepts `cursor` and `limit` parameters.
 
 Example:
 ```bash
-curl "localhost:8000/cars?limit=10&offset=0"
+curl "localhost:8000/cars?cursor=1&limit=10"
 ```
 
 [//]: # (- auto Incremental PK of the ID)

@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"github.com/krukkrz/pagination/pkg/api"
 	"github.com/krukkrz/pagination/pkg/api/internal"
-	"github.com/krukkrz/pagination/pkg/books"
-	"github.com/krukkrz/pagination/pkg/books/model"
-	cars "github.com/krukkrz/pagination/pkg/cars/model"
+	booksModels "github.com/krukkrz/pagination/pkg/books/model"
+	carsModels "github.com/krukkrz/pagination/pkg/cars/model"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -23,7 +22,7 @@ func TestFetchAllBooks(t *testing.T) {
 		method          string
 		expectedStatus  int
 		serviceError    bool
-		expectedBooks   []model.Book
+		expectedBooks   []booksModels.Book
 		bookServiceMock api.BookRepository
 		prevOffset      int
 		nextOffset      int
@@ -94,10 +93,6 @@ func TestFetchAllBooks(t *testing.T) {
 			expectedBooks:   internal.Books,
 			expectedStatus:  http.StatusOK,
 		},
-		{
-			name: "if no parameters in the request, return first page with default 10 elements", //todo implement this test
-			skip: true,
-		},
 	}
 
 	for _, tc := range testCases {
@@ -127,7 +122,7 @@ func TestFetchAllBooks(t *testing.T) {
 			}
 
 			if tc.expectedBooks != nil {
-				var actual api.PaginatedResponse[books.Repository]
+				var actual api.PaginatedResponse[booksModels.Book]
 				if err := json.NewDecoder(rr.Body).Decode(&actual); err != nil {
 					t.Fatalf("unexpected error while parsing response body: %v", err)
 				}
@@ -136,16 +131,17 @@ func TestFetchAllBooks(t *testing.T) {
 					t.Errorf("api returned unexpected body: got %v want %v", actual.Data, tc.expectedBooks)
 				}
 
-				expectedPrev := fmt.Sprintf("/books?limit=%v&offset=%d", tc.limit, tc.prevOffset)
+				expectedUrlFormat := "/books?limit=%v&offset=%d"
+				expectedPrev := fmt.Sprintf(expectedUrlFormat, tc.limit, tc.prevOffset)
 				if actual.Links.Prev != expectedPrev {
 					t.Errorf("unexpected prev link value, got: %s, expected: %s", actual.Links.Prev, expectedPrev)
 				}
 
-				expectedNext := fmt.Sprintf("/books?limit=%v&offset=%d", tc.limit, tc.nextOffset)
+				expectedNext := fmt.Sprintf(expectedUrlFormat, tc.limit, tc.nextOffset)
 				if actual.Links.Next != expectedNext {
 					t.Errorf("unexpected next link value, got: %s, expected: %s", actual.Links.Next, expectedNext)
 				}
-				expectedFirst := fmt.Sprintf("/books?limit=%v&offset=%d", tc.limit, 0)
+				expectedFirst := fmt.Sprintf(expectedUrlFormat, tc.limit, 0)
 				if actual.Links.First != expectedFirst {
 					t.Errorf("unexpected first link value, got: %s, expected: %s", actual.Links.First, expectedFirst)
 				}
@@ -163,10 +159,10 @@ func TestFetchAllCars(t *testing.T) {
 		method            string
 		expectedStatus    int
 		serviceError      bool
-		expectedBooks     []model.Book
+		expectedCars      []carsModels.Car
 		carRepositoryMock api.CarRepository
-		prevOffset        int
-		nextOffset        int
+		prevCursor        int
+		nextCursor        int
 	}{
 		{
 			name:              "handling only GET request",
@@ -207,36 +203,32 @@ func TestFetchAllCars(t *testing.T) {
 		{
 			name:              "returns books in response if all went good [0-10]",
 			limit:             10,
-			cursor:            0,
-			prevOffset:        0,
-			nextOffset:        10,
-			carRepositoryMock: internal.CarRepositoryMockReturnCars(10, 0, t),
-			expectedBooks:     internal.Books,
+			cursor:            1,
+			prevCursor:        1,
+			nextCursor:        11,
+			carRepositoryMock: internal.CarRepositoryMockReturnCars(10, 1, t),
+			expectedCars:      internal.Cars,
 			expectedStatus:    http.StatusOK,
 		},
 		{
 			name:              "returns books in response if all went good [4-9]",
 			limit:             5,
 			cursor:            4,
-			prevOffset:        0,
-			nextOffset:        9,
+			prevCursor:        1,
+			nextCursor:        9,
 			carRepositoryMock: internal.CarRepositoryMockReturnCars(5, 4, t),
-			expectedBooks:     internal.Books,
+			expectedCars:      internal.Cars,
 			expectedStatus:    http.StatusOK,
 		},
 		{
 			name:              "returns books in response if all went good [9-14]",
 			limit:             5,
 			cursor:            9,
-			prevOffset:        4,
-			nextOffset:        14,
+			prevCursor:        4,
+			nextCursor:        14,
 			carRepositoryMock: internal.CarRepositoryMockReturnCars(5, 9, t),
-			expectedBooks:     internal.Books,
+			expectedCars:      internal.Cars,
 			expectedStatus:    http.StatusOK,
-		},
-		{
-			name: "if no parameters in the request, return first page with default 10 elements", //todo implement this test
-			skip: true,
 		},
 	}
 
@@ -247,7 +239,7 @@ func TestFetchAllCars(t *testing.T) {
 			}
 			parameters := buildCarsParameters(tc.cursor, tc.limit)
 
-			req, err := http.NewRequest(tc.method, fmt.Sprintf("/cars%s", parameters), nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("/carsModels%s", parameters), nil)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -257,7 +249,7 @@ func TestFetchAllCars(t *testing.T) {
 			srv := api.NewServer(br, cr)
 
 			rr := httptest.NewRecorder()
-			handler := http.HandlerFunc(srv.FetchAllBooks)
+			handler := http.HandlerFunc(srv.FetchAllCars)
 
 			handler.ServeHTTP(rr, req)
 
@@ -266,26 +258,27 @@ func TestFetchAllCars(t *testing.T) {
 					status, tc.expectedStatus)
 			}
 
-			if tc.expectedBooks != nil {
-				var actual api.PaginatedResponse[cars.Car]
+			if tc.expectedCars != nil {
+				var actual api.PaginatedResponse[carsModels.Car]
 				if err := json.NewDecoder(rr.Body).Decode(&actual); err != nil {
 					t.Fatalf("unexpected error while parsing response body: %v", err)
 				}
 
-				if !reflect.DeepEqual(actual.Data, tc.expectedBooks) {
-					t.Errorf("api returned unexpected body: got %v want %v", actual.Data, tc.expectedBooks)
+				if !reflect.DeepEqual(actual.Data, tc.expectedCars) {
+					t.Errorf("api returned unexpected body: got %v want %v", actual.Data, tc.expectedCars)
 				}
 
-				expectedPrev := fmt.Sprintf("/books?limit=%v&offset=%d", tc.limit, tc.prevOffset)
+				expectedUrlFormat := "/carsModels?cursor=%v&limit=%d"
+				expectedPrev := fmt.Sprintf(expectedUrlFormat, tc.prevCursor, tc.limit)
 				if actual.Links.Prev != expectedPrev {
 					t.Errorf("unexpected prev link value, got: %s, expected: %s", actual.Links.Prev, expectedPrev)
 				}
 
-				expectedNext := fmt.Sprintf("/books?limit=%v&offset=%d", tc.limit, tc.nextOffset)
+				expectedNext := fmt.Sprintf(expectedUrlFormat, tc.nextCursor, tc.limit)
 				if actual.Links.Next != expectedNext {
 					t.Errorf("unexpected next link value, got: %s, expected: %s", actual.Links.Next, expectedNext)
 				}
-				expectedFirst := fmt.Sprintf("/books?limit=%v&offset=%d", tc.limit, 0)
+				expectedFirst := fmt.Sprintf(expectedUrlFormat, 1, tc.limit)
 				if actual.Links.First != expectedFirst {
 					t.Errorf("unexpected first link value, got: %s, expected: %s", actual.Links.First, expectedFirst)
 				}
